@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api, Resource
 
 from models import User, Location, Sighting, Comment
 from extensions import db, migrate
@@ -18,6 +19,7 @@ def create_app():
 
 
 app = create_app()
+
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
