@@ -8,6 +8,7 @@ flask = "*"
 flask-migrate = "*"
 flask-sqlalchemy = "*"
 alembic = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 

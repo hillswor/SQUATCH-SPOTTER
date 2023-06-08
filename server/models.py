@@ -1,7 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
+from flask_bcrypt import Bcrypt
+import re
 from datetime import datetime
+
+from extensions import db
+
+bcrypt = Bcrypt()
 
 
 class User(db.Model):
@@ -28,11 +34,11 @@ class User(db.Model):
         return email
 
     def set_password(self, password):
-        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+        hashed_password = bcrypt.generate_password_hash(password)
         self.password = hashed_password.decode("utf-8")
 
     def verify_password(self, password):
-        return bcrypt.checkpw(password.encode("utf-8"), self.password.encode("utf-8"))
+        return bcrypt.check_password_hash(self.password, password)
 
     def to_dict(self):
         return {
@@ -81,8 +87,8 @@ class Sighting(db.Model):
     __tablename__ = "sightings"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    location_id = db.Column(db.Integer, db.ForeignKey("location.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    location_id = db.Column(db.Integer, db.ForeignKey("locations.id"))
     sighting_date = db.Column(db.Date)
     sighting_time = db.Column(db.Time)
     description = db.Column(db.String(1500))
@@ -118,8 +124,8 @@ class Comment(db.Model):
     __tablename__ = "comments"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    sighting_id = db.Column(db.Integer, db.ForeignKey("sighting.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    sighting_id = db.Column(db.Integer, db.ForeignKey("sightings.id"))
     comment_text = db.Column(db.String(1000))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
