@@ -11,6 +11,7 @@ alembic = "*"
 flask-bcrypt = "*"
 faker = "*"
 flask-restful = "*"
+honcho = "*"
 
 [dev-packages]
 
