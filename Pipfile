@@ -12,6 +12,7 @@ flask-bcrypt = "*"
 faker = "*"
 flask-restful = "*"
 honcho = "*"
+gunicorn = "*"
 
 [dev-packages]
 

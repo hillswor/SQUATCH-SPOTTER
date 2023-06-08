@@ -19,6 +19,27 @@ def create_app():
 
 
 app = create_app()
+api = Api(app)
+
+
+class Home(Resource):
+    def get(self):
+        return {"message": "Hello, World!"}
+
+
+api.add_resource(Home, "/")
+
+
+class UserList(Resource):
+    def get(self):
+        users = User.query.all()
+        return [user.to_dict() for user in users]
+
+    def post(self):
+        pass
+
+
+api.add_resource(UserList, "/users")
 
 
 if __name__ == "__main__":
