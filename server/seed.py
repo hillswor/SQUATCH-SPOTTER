@@ -22,10 +22,8 @@ def seed_db(num_users=10, num_locations=5, num_sightings=20, num_comments=50):
         for _ in range(num_users):
             user = User(
                 email=fake.unique.email(),
-                created_at=fake.date_time_this_year(),
-                last_login=fake.date_time_this_year(),
             )
-            user.set_password(fake.password(length=10))
+            user.set_password("abc123")
             db.session.add(user)
 
         db.session.commit()
@@ -40,8 +38,6 @@ def seed_db(num_users=10, num_locations=5, num_sightings=20, num_comments=50):
                 latitude=fake.latitude(),
                 longitude=fake.longitude(),
                 description=fake.text(max_nb_chars=200),
-                created_at=fake.date_time_this_year(),
-                updated_at=fake.date_time_this_year(),
             )
             db.session.add(location)
 
