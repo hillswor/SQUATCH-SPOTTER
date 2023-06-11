@@ -15,6 +15,7 @@ def clear_data():
         db.session.query(Location).delete()
         db.session.query(Sighting).delete()
         db.session.query(Comment).delete()
+        db.session.commit()
 
 
 def seed_db(num_users=10, num_locations=5, num_sightings=20, num_comments=50):
