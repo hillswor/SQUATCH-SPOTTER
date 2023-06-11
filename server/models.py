@@ -4,6 +4,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from flask_bcrypt import Bcrypt
 import re
 from datetime import datetime
+import base64
 
 from extensions import db
 
@@ -44,8 +45,6 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "created_at": self.created_at.isoformat(),
-            "last_login": self.last_login.isoformat(),
         }
 
     def __repr__(self):
@@ -57,8 +56,7 @@ class Location(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(254))
-    latitude = db.Column(db.Numeric(9, 6))
-    longitude = db.Column(db.Numeric(9, 6))
+    state = db.Column(db.String(2))
     description = db.Column(db.String(500))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
@@ -72,15 +70,14 @@ class Location(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "latitude": float(self.latitude) if self.latitude is not None else None,
-            "longitude": float(self.longitude) if self.longitude is not None else None,
+            "state": self.state,
             "description": self.description,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
 
     def __repr__(self):
-        return f"<Location name={self.name} description={self.description}>"
+        return f"<Location name={self.name} state={self.state} description={self.description}>"
 
 
 class Sighting(db.Model):
@@ -101,16 +98,19 @@ class Sighting(db.Model):
     comments = db.relationship("Comment", backref="sighting", lazy=True)
 
     def to_dict(self):
+        location = Location.query.get(self.location_id)
         return {
             "id": self.id,
             "user_id": self.user_id,
             "location_id": self.location_id,
+            "location": location.to_dict() if location else None,
             "sighting_date": self.sighting_date.isoformat(),
             "sighting_time": self.sighting_time.isoformat(),
             "description": self.description,
             "image": self.get_image_base64() if self.image else None,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
+            "comments": [comment.to_dict() for comment in self.comments],
         }
 
     def get_image_base64(self):

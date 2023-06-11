@@ -2,7 +2,7 @@ from flask import Flask, request, session, make_response, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api, Resource
-from flask_bcrypt import check_password_hash
+from flask_bcrypt import check_password_hash, generate_password_hash
 from dotenv import load_dotenv
 import os
 import ipdb
@@ -53,16 +53,54 @@ class Login(Resource):
 api.add_resource(Login, "/login")
 
 
-class UserList(Resource):
+class CheckSession(Resource):
+    def get(self):
+        if session.get("user_id"):
+            user = User.query.get(session["user_id"])
+            return make_response(jsonify(user.to_dict()), 200)
+        else:
+            return make_response({"error": "No user logged in"}, 401)
+
+
+api.add_resource(CheckSession, "/check-session")
+
+
+class Logout(Resource):
+    def delete(self):
+        session.clear()
+        return make_response({"message": "Successfully logged out"}, 200)
+
+
+api.add_resource(Logout, "/logout")
+
+
+class Users(Resource):
     def get(self):
         users = User.query.all()
         return [user.to_dict() for user in users]
 
     def post(self):
-        pass
+        data = request.get_json()
+        email = data.get("email")
+        password = data.get("password")
+
+        new_user = User(email=email, password=generate_password_hash(password))
+        db.session.add(new_user)
+        db.session.commit()
+
+        return make_response(jsonify(new_user.to_dict()), 201)
 
 
-api.add_resource(UserList, "/users")
+api.add_resource(Users, "/users")
+
+
+class Sightings(Resource):
+    def get(self):
+        sightings = Sighting.query.all()
+        return [sighting.to_dict() for sighting in sightings]
+
+
+api.add_resource(Sightings, "/sightings")
 
 
 if __name__ == "__main__":

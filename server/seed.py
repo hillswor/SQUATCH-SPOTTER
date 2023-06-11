@@ -36,8 +36,7 @@ def seed_db(num_users=10, num_locations=5, num_sightings=20, num_comments=50):
         for _ in range(num_locations):
             location = Location(
                 name=fake.city(),
-                latitude=fake.latitude(),
-                longitude=fake.longitude(),
+                state=fake.state_abbr(),
                 description=fake.text(max_nb_chars=200),
             )
             db.session.add(location)
