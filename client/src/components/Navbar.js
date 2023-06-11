@@ -1,29 +1,86 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ loggedIn, toggleLoggedIn }) {
+  const history = useHistory();
+  function handleLogout() {
+    fetch("http://127.0.0.1:5555/logout", {
+      method: "DELETE",
+    }).then((r) => {
+      if (r.ok) {
+        toggleLoggedIn();
+        history.push("/");
+      }
+    });
+  }
+
   return (
-    <nav>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/test">Test Page</Link>
-        </li>
-        <li>
-          <Link to="/report">Report Sighting</Link>
-        </li>
-        <li>
-          <Link to="/sightings">Sightings</Link>
-        </li>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/signup">Sign Up</Link>
-        </li>
-      </ul>
+    <nav className="bg-green-800 p-5 mt-0 fixed w-full z-10 top-0">
+      <div className="container mx-auto flex flex-wrap items-center">
+        <div className="flex w-full md:w-1/2 justify-center md:justify-start text-white font-extrabold">
+          <Link
+            to="/"
+            className="text-white no-underline hover:text-yellow-300 hover:no-underline"
+          >
+            <span className="text-2xl pl-2">
+              <i className="em em-grinning"></i> Squatch Spotter
+            </span>
+          </Link>
+        </div>
+
+        <div className="flex w-full pt-2 content-center justify-between md:w-1/2 md:justify-end">
+          <ul className="list-reset flex justify-between flex-1 md:flex-none items-center">
+            <li className="mr-3">
+              <Link
+                className="inline-block text-white no-underline hover:text-yellow-300 hover:text-underline py-2 px-4"
+                to="/report"
+              >
+                Report Sighting
+              </Link>
+            </li>
+            {loggedIn ? (
+              <>
+                <li className="mr-3">
+                  <Link
+                    className="inline-block text-white no-underline hover:text-yellow-300 hover:text-underline py-2 px-4"
+                    to="/account"
+                  >
+                    My Account
+                  </Link>
+                </li>
+                <li className="mr-3">
+                  <button
+                    onClick={handleLogout}
+                    className="inline-block text-white no-underline hover:text-yellow-300 hover:text-underline py-2 px-4"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="mr-3">
+                  <Link
+                    className="inline-block text-white no-underline hover:text-yellow-300 hover:text-underline py-2 px-4"
+                    to="/login"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li className="mr-3">
+                  <Link
+                    className="inline-block text-white no-underline hover:text-yellow-300 hover:text-underline py-2 px-4"
+                    to="/signup"
+                  >
+                    Sign Up
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      </div>
     </nav>
   );
 }
