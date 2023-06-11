@@ -97,10 +97,40 @@ api.add_resource(Users, "/users")
 class Sightings(Resource):
     def get(self):
         sightings = Sighting.query.all()
-        return [sighting.to_dict() for sighting in sightings]
+        return make_response(jsonify([sighting.to_dict() for sighting in sightings]))
 
 
 api.add_resource(Sightings, "/sightings")
+
+
+class SightingByID(Resource):
+    def get(self, id):
+        sighting = Sighting.query.get(id)
+        return make_response(jsonify(sighting.to_dict()))
+
+
+api.add_resource(SightingByID, "/sightings/<int:id>")
+
+
+class Comments(Resource):
+    def post(self):
+        data = request.get_json()
+        user_id = data.get("user_id")
+        sighting_id = data.get("sighting_id")
+        comment_text = data.get("comment_text")
+
+        new_comment = Comment(
+            user_id=user_id,
+            sighting_id=sighting_id,
+            comment_text=comment_text,
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+
+        return make_response(jsonify(new_comment.to_dict()), 201)
+
+
+api.add_resource(Comments, "/comments")
 
 
 if __name__ == "__main__":

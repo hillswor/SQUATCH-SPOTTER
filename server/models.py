@@ -111,6 +111,7 @@ class Sighting(db.Model):
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
             "comments": [comment.to_dict() for comment in self.comments],
+            "user": self.user.to_dict() if self.user else None,  # Include the user data
         }
 
     def get_image_base64(self):
@@ -140,6 +141,7 @@ class Comment(db.Model):
             "comment_text": self.comment_text,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
+            "user": self.user.to_dict() if self.user else None,  # Include the user data
         }
 
     def __repr__(self):

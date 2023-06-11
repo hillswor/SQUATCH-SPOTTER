@@ -1,61 +1,80 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Switch, Route, useHistory } from "react-router-dom";
 import Navbar from "./Navbar";
 import Home from "./Home";
 import Report from "./Report";
 import Signup from "./Signup";
 import Login from "./Login";
 import MyAccount from "./MyAccount";
+import Sighting from "./Sighting";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
-  const setUserAndLogin = useCallback((user) => {
-    setUser(user);
-    setLoggedIn(true);
-  }, []);
-
-  const toggleLoggedIn = useCallback(() => {
-    setLoggedIn((prevState) => !prevState);
-  }, []);
+  const history = useHistory();
 
   useEffect(() => {
+    checkUserSession();
+  }, []);
+
+  const checkUserSession = () => {
     fetch("http://127.0.0.1:5555/check-session")
       .then((response) => response.json())
       .then((data) => {
         if (data.id) {
-          setLoggedIn(true);
           setUser(data);
+          setLoggedIn(true);
         } else {
-          setLoggedIn(false);
           setUser(null);
+          setLoggedIn(false);
         }
       })
       .catch((error) => {
         console.error("Error checking user session: ", error);
       });
-  }, []);
+  };
+
+  const handleLogin = (user) => {
+    setUser(user);
+    setLoggedIn(true);
+    history.push(`/users/${user.id}`);
+  };
+
+  const handleLogout = () => {
+    fetch("http://127.0.0.1:5555/logout", { method: "DELETE" })
+      .then(() => {
+        setUser(null);
+        setLoggedIn(false);
+        history.push("/");
+      })
+      .catch((error) => {
+        console.error("Error logging out: ", error);
+      });
+  };
 
   return (
     <div>
-      <Navbar loggedIn={loggedIn} toggleLoggedIn={toggleLoggedIn} />
+      <Navbar loggedIn={loggedIn} onLogout={handleLogout} />
       <Switch>
-        <Route exact path="/report">
-          <Report />
-        </Route>
-        <Route exact path="/signup">
-          <Signup setUserAndLogin={setUserAndLogin} />
-        </Route>
-        <Route exact path="/login">
-          <Login setUserAndLogin={setUserAndLogin} />
-        </Route>
-        <Route path="/users/:id">
-          <MyAccount />
-        </Route>
-        <Route exact path="/">
-          <Home />
-        </Route>
+        <Route exact path="/report" component={Report} />
+        <Route
+          exact
+          path="/signup"
+          render={(props) => <Signup {...props} onLogin={handleLogin} />}
+        />
+        <Route
+          exact
+          path="/login"
+          render={(props) => <Login {...props} onLogin={handleLogin} />}
+        />
+        <Route path="/users/:id" component={MyAccount} />
+        <Route
+          path="/sightings/:id"
+          render={(props) => (
+            <Sighting {...props} loggedIn={loggedIn} user={user} />
+          )}
+        />
+        <Route exact path="/" component={Home} />
       </Switch>
     </div>
   );

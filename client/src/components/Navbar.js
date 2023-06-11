@@ -2,17 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
-function Navbar({ loggedIn, toggleLoggedIn }) {
+function Navbar({ loggedIn, onLogout }) {
   const history = useHistory();
+
   function handleLogout() {
     fetch("http://127.0.0.1:5555/logout", {
       method: "DELETE",
-    }).then((r) => {
-      if (r.ok) {
-        toggleLoggedIn();
-        history.push("/");
-      }
-    });
+    })
+      .then((r) => {
+        if (r.ok) {
+          onLogout(); // Call the onLogout function from the parent component
+          history.push("/");
+        }
+      })
+      .catch((error) => {
+        console.error("Error logging out: ", error);
+      });
   }
 
   return (
