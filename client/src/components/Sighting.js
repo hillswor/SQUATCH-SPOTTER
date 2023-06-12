@@ -62,11 +62,6 @@ function Sighting({ match, loggedIn, user }) {
         </p>
         <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
           <div className="rounded-md shadow">
-            <img
-              className="h-48 w-full object-cover mb-5 rounded"
-              src={`data:image/jpeg;base64,${sighting.image}`}
-              alt="Sighting"
-            />
             <p className="px-5 text-green-1000">{sighting.description}</p>
           </div>
         </div>

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 import Navbar from "./Navbar";
 import Home from "./Home";
-import Report from "./Report";
 import Signup from "./Signup";
 import Login from "./Login";
 import MyAccount from "./MyAccount";
 import Sighting from "./Sighting";
+import ReportSighting from "./ReportSighting";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -56,7 +56,6 @@ function App() {
     <div>
       <Navbar loggedIn={loggedIn} onLogout={handleLogout} />
       <Switch>
-        <Route exact path="/report" component={Report} />
         <Route
           exact
           path="/signup"
@@ -72,6 +71,12 @@ function App() {
           path="/sightings/:id"
           render={(props) => (
             <Sighting {...props} loggedIn={loggedIn} user={user} />
+          )}
+        />
+        <Route
+          path="/report-sighting"
+          render={(props) => (
+            <ReportSighting {...props} loggedIn={loggedIn} user={user} />
           )}
         />
         <Route exact path="/" component={Home} />
