@@ -5,6 +5,7 @@ from flask_restful import Api, Resource
 from flask_bcrypt import check_password_hash, generate_password_hash
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 import ipdb
 
 from models import User, Location, Sighting, Comment
@@ -99,6 +100,34 @@ class Sightings(Resource):
         sightings = Sighting.query.all()
         return make_response(jsonify([sighting.to_dict() for sighting in sightings]))
 
+    def post(self):
+        data = request.get_json()
+        user_id = data.get("user_id")
+        location_id = data.get("location_id")
+        sighting_date_string = data.get("sighting_date")
+        sighting_time = data.get("sighting_time")
+        description = data.get("description")
+
+        sighting_time = datetime.strptime(sighting_time, "%H:%M").time()
+        try:
+            sighting_date = datetime.strptime(sighting_date_string, "%Y-%m-%d").date()
+        except ValueError:
+            return make_response(
+                {"error": "Invalid date format. Please use 'YYYY-MM-DD'."}, 400
+            )
+
+        new_sighting = Sighting(
+            user_id=user_id,
+            location_id=location_id,
+            sighting_date=sighting_date,
+            sighting_time=sighting_time,
+            description=description,
+        )
+        db.session.add(new_sighting)
+        db.session.commit()
+
+        return make_response(jsonify(new_sighting.to_dict()), 201)
+
 
 api.add_resource(Sightings, "/sightings")
 
@@ -131,6 +160,27 @@ class Comments(Resource):
 
 
 api.add_resource(Comments, "/comments")
+
+
+class Locations(Resource):
+    def get(self):
+        locations = Location.query.all()
+        return make_response(jsonify([location.to_dict() for location in locations]))
+
+    def post(self):
+        data = request.get_json()
+        name = data.get("name")
+        state = data.get("state")
+        description = data.get("description")
+
+        new_location = Location(name=name, state=state, description=description)
+        db.session.add(new_location)
+        db.session.commit()
+
+        return make_response(jsonify(new_location.to_dict()), 201)
+
+
+api.add_resource(Locations, "/locations")
 
 
 if __name__ == "__main__":
