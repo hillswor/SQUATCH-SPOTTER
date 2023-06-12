@@ -89,7 +89,6 @@ class Sighting(db.Model):
     sighting_date = db.Column(db.Date)
     sighting_time = db.Column(db.Time)
     description = db.Column(db.String(1500))
-    image = db.Column(db.LargeBinary)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
@@ -107,15 +106,11 @@ class Sighting(db.Model):
             "sighting_date": self.sighting_date.isoformat(),
             "sighting_time": self.sighting_time.isoformat(),
             "description": self.description,
-            "image": self.get_image_base64() if self.image else None,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
             "comments": [comment.to_dict() for comment in self.comments],
             "user": self.user.to_dict() if self.user else None,  # Include the user data
         }
-
-    def get_image_base64(self):
-        return base64.b64encode(self.image).decode("utf-8")
 
     def __repr__(self):
         return f"<Sighting id={self.id} user_id={self.user_id} location_id={self.location_id} sighting_date={self.sighting_date}>"

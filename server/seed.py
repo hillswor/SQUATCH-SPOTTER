@@ -54,7 +54,6 @@ def seed_db(num_users=10, num_locations=5, num_sightings=20, num_comments=50):
                 sighting_date=fake.date_this_year(),
                 sighting_time=fake.time_object(),
                 description=fake.text(max_nb_chars=1000),
-                image=base64.b64encode(fake.binary(length=5000)),
                 created_at=fake.date_time_this_year(),
                 updated_at=fake.date_time_this_year(),
             )
