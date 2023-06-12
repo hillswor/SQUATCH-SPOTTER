@@ -111,6 +111,10 @@ function Sighting({ match, loggedIn, user }) {
             <a href="/login" className="text-green-600 font-bold underline">
               log in
             </a>{" "}
+            or{" "}
+            <a href="/signup" className="text-green-600 font-bold underline">
+              sign up
+            </a>{" "}
             to post a comment.
           </p>
         )}

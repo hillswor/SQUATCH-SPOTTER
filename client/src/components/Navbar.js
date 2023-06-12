@@ -49,7 +49,7 @@ function Navbar({ loggedIn, onLogout }) {
                 <li className="mr-3">
                   <Link
                     className="inline-block text-white no-underline hover:text-yellow-300 hover:text-underline py-2 px-4"
-                    to="/account"
+                    to={`/users/${loggedIn.id}`}
                   >
                     My Account
                   </Link>

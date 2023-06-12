@@ -7,6 +7,7 @@ import Login from "./Login";
 import MyAccount from "./MyAccount";
 import Sighting from "./Sighting";
 import ReportSighting from "./ReportSighting";
+import EditSighting from "./EditSighting";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -66,7 +67,16 @@ function App() {
           path="/login"
           render={(props) => <Login {...props} onLogin={handleLogin} />}
         />
-        <Route path="/users/:id" component={MyAccount} />
+        <Route
+          path="/users/:id"
+          render={(props) => <MyAccount {...props} user={user} />}
+        />
+        <Route
+          path="/sightings/:id/edit"
+          render={(props) => (
+            <EditSighting {...props} loggedIn={loggedIn} user={user} />
+          )}
+        />
         <Route
           path="/sightings/:id"
           render={(props) => (

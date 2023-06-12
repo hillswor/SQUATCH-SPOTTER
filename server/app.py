@@ -137,6 +137,61 @@ class SightingByID(Resource):
         sighting = Sighting.query.get(id)
         return make_response(jsonify(sighting.to_dict()))
 
+    def delete(self, id):
+        sighting = Sighting.query.get(id)
+        if not sighting:
+            return make_response({"error": "Sighting not found"}, 404)
+
+        db.session.delete(sighting)
+        db.session.commit()
+        return make_response({"message": "Sighting deleted successfully"}, 200)
+
+    def patch(self, id):
+        sighting = Sighting.query.get(id)
+        if not sighting:
+            return make_response({"error": "Sighting not found"}, 404)
+
+        data = request.get_json()
+        location_data = data.get("location")
+        sighting_date = data.get("sighting_date")
+        sighting_time = data.get("sighting_time")
+        description = data.get("description")
+
+        if location_data:
+            location = Location.query.get(sighting.location_id)
+            if not location:
+                return make_response({"error": "Location not found"}, 404)
+
+            location.name = location_data.get("name")
+            location.state = location_data.get("state")
+            location.description = location_data.get("description")
+
+        if sighting_date:
+            try:
+                sighting.sighting_date = datetime.strptime(
+                    sighting_date, "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return make_response(
+                    {"error": "Invalid date format. Please use 'YYYY-MM-DD'."}, 400
+                )
+
+        if sighting_time:
+            try:
+                sighting.sighting_time = datetime.strptime(
+                    sighting_time, "%H:%M"
+                ).time()
+            except ValueError:
+                return make_response(
+                    {"error": "Invalid time format. Please use 'HH:MM'."}, 400
+                )
+
+        if description:
+            sighting.description = description
+
+        db.session.commit()
+        return make_response(jsonify(sighting.to_dict()), 200)
+
 
 api.add_resource(SightingByID, "/sightings/<int:id>")
 
@@ -181,6 +236,15 @@ class Locations(Resource):
 
 
 api.add_resource(Locations, "/locations")
+
+
+class UserSightings(Resource):
+    def get(self, user_id):
+        sightings = Sighting.query.filter_by(user_id=user_id).all()
+        return make_response(jsonify([sighting.to_dict() for sighting in sightings]))
+
+
+api.add_resource(UserSightings, "/users/<int:user_id>/sightings")
 
 
 if __name__ == "__main__":
