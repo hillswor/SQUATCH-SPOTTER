@@ -4,7 +4,6 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from flask_bcrypt import Bcrypt
 import re
 from datetime import datetime
-import base64
 
 from extensions import db
 

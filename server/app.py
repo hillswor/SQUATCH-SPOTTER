@@ -6,7 +6,6 @@ from flask_bcrypt import check_password_hash, generate_password_hash
 from dotenv import load_dotenv
 import os
 from datetime import datetime
-import ipdb
 
 from models import User, Location, Sighting, Comment
 from extensions import db, migrate

@@ -9,13 +9,12 @@ flask-migrate = "4.0.4"
 flask-sqlalchemy = "3.0.3"
 alembic = "1.11.1"
 flask-bcrypt = "1.0.1"
-faker = "*"
+faker = "18.10.1"
 flask-restful = "0.3.10"
 honcho = "1.1.0"
 gunicorn = "20.1.0"
-python-dotenv = "*"
-ipdb = "*"
-flask-cors = "*"
+python-dotenv = "1.0.0"
+flask-cors = "3.0.10"
 
 [dev-packages]
 

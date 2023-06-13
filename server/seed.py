@@ -1,6 +1,5 @@
 from faker import Faker
 from random import choice
-import base64
 
 from models import User, Location, Sighting, Comment
 from extensions import db
