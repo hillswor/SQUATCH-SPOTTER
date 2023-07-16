@@ -5,7 +5,7 @@ function MyAccount({ user }) {
   const [sightings, setSightings] = useState([]);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5555/users/${user.id}/sightings`)
+    fetch(`/users/${user.id}/sightings`)
       .then((response) => response.json())
       .then((data) => {
         setSightings(data);
@@ -16,7 +16,7 @@ function MyAccount({ user }) {
   }, [user.id]);
 
   const handleDeleteSighting = (sightingId) => {
-    fetch(`http://127.0.0.1:5555/sightings/${sightingId}`, {
+    fetch(`/sightings/${sightingId}`, {
       method: "DELETE",
     })
       .then((response) => response.json())

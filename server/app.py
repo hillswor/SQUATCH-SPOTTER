@@ -19,10 +19,15 @@ secret_key = os.getenv("SECRET_KEY")
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        static_url_path="",
+        static_folder="../client/build",
+        template_folder="../client/build",
+    )
     CORS(app)
     app.config["SECRET_KEY"] = secret_key
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.json.compact = False
 

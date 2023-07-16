@@ -15,7 +15,7 @@ function ReportSighting({ loggedIn, user }) {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    let response = await fetch("http://127.0.0.1:5555/locations", {
+    let response = await fetch("/locations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -32,7 +32,7 @@ function ReportSighting({ loggedIn, user }) {
 
     let locationData = await response.json();
 
-    response = await fetch("http://127.0.0.1:5555/sightings", {
+    response = await fetch("/sightings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

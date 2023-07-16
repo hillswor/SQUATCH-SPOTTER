@@ -13,8 +13,7 @@ function EditSighting() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch the existing sighting data and populate the form fields
-    fetch(`http://127.0.0.1:5555/sightings/${id}`)
+    fetch(`/sightings/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setLocationName(data.location.name);
@@ -39,7 +38,7 @@ function EditSighting() {
       "0"
     )}`;
 
-    fetch(`http://127.0.0.1:5555/sightings/${id}`, {
+    fetch(`/sightings/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

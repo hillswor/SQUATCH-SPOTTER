@@ -6,7 +6,7 @@ function Sighting({ match, loggedIn, user }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5555/sightings/${match.params.id}`)
+    fetch(`/sightings/${match.params.id}`)
       .then((response) => response.json())
       .then((data) => setSighting(data));
   }, [match.params.id]);
@@ -28,7 +28,7 @@ function Sighting({ match, loggedIn, user }) {
       comment_text: commentText,
     };
 
-    fetch("http://127.0.0.1:5555/comments", {
+    fetch("/comments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(comment),

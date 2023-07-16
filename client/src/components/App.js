@@ -19,7 +19,7 @@ function App() {
   }, []);
 
   const checkUserSession = () => {
-    fetch("http://127.0.0.1:5555/check-session")
+    fetch("/check-session")
       .then((response) => response.json())
       .then((data) => {
         if (data.id) {
@@ -42,7 +42,7 @@ function App() {
   };
 
   const handleLogout = () => {
-    fetch("http://127.0.0.1:5555/logout", { method: "DELETE" })
+    fetch("/logout", { method: "DELETE" })
       .then(() => {
         setUser(null);
         setLoggedIn(false);

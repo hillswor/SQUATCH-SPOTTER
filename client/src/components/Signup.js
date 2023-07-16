@@ -24,7 +24,7 @@ function Signup({ onLogin }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateEmail(email)) {
-      fetch("http://127.0.0.1:5555/users", {
+      fetch("/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
